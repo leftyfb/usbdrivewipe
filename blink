@@ -1,0 +1,56 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          blink
+# Required-Start:    hostname $local_fs
+# Required-Stop:
+# Should-Start:      $x-display-manager gdm kdm xdm ldm sdm wdm nodm
+# Default-Start:     1 2 3 4 5
+# Default-Stop:
+# Short-Description: Make blink
+# Description:       Make blink
+#                    
+### END INIT INFO
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+[ "$DELAYLOGIN" ] || DELAYLOGIN=yes
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+. /lib/lsb/init-functions
+
+do_start () {
+ /home/pi/blinkred.sh >/dev/null 2>&1 &
+}
+
+do_stop () {
+ echo "1" > /tmp/bootstat.tmp
+}
+
+do_status () {
+	return 0
+}
+
+case "$1" in
+  start|"")
+#        log_daemon_msg "Blinking LED."
+	do_start
+#	log_end_msg 0 || true
+	;;
+  restart|reload|force-reload)
+	echo "Error: argument '$1' not supported" >&2
+	exit 3
+	;;
+  stop)
+	do_stop
+	;;
+  status)
+	do_status
+	exit $?
+	;;
+  *)
+	echo "Usage: blink [start|stop|status]" >&2
+	exit 3
+	;;
+esac
+
+:
